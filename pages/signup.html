@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastro - Financial Manager</title>
+  <link rel="stylesheet" href="../style/login.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <h2>Criar Conta</h2>
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="name">Nome</label>
+          <input type="text" id="name" placeholder="Digite seu nome" required>
+        </div>
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" placeholder="Digite seu e-mail" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" placeholder="Digite sua senha" required>
+        </div>
+        <button type="submit" class="btn-primary">Cadastrar</button>
+      </form>
+
+      <p class="signup-text">Já tem uma conta? <a href="login.html">Entrar</a></p>
+    </div>
+  </div>
+
+  <script type="module" src="../script/signup.js"></script>
+</body>
+</html>

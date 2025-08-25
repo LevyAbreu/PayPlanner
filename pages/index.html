@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Financial Management App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+  <div class="dashboard" id="dashboard">
+  <header class="header">
+    <div class="logo">Financial Manager</div>
+
+    <div class="user-profile" id="userDropdown">
+      <span id="userName">Carregando...</span>
+      <span class="arrow">▼</span>
+      <div class="dropdown-menu">
+        <a href="#" id="logoutBtn">Sair</a>
+      </div>
+    </div>
+  </header>
+    
+    <div class="container">
+      <div class="summary">
+        <div class="summary-card total"><h3>Dívida Total</h3><p id="totalDebt">R$0,00</p></div>
+        <div class="summary-card paid"><h3>Pagas</h3><p id="paidAmount">R$0,00</p></div>
+        <div class="summary-card pending"><h3>Pendentes</h3><p id="pendingAmount">R$0,00</p></div>
+        <div class="summary-card overdue"><h3>Vencidas</h3><p id="overdueAmount">R$0,00</p></div>
+      </div>
+
+      <div class="actions">
+        <div class="filters">
+          <button class="btn-filter active" onclick="filterDebts('all')">Todas</button>
+          <button class="btn-filter" onclick="filterDebts('paid')">Pagas</button>
+          <button class="btn-filter" onclick="filterDebts('paying')">Em Pagamento</button>
+          <button class="btn-filter" onclick="filterDebts('pending')">Pendentes</button>
+          <button class="btn-filter" onclick="filterDebts('overdue')">Vencidas</button>
+        </div>
+        <button class="btn-primary" id="addDebtBtn"><i class="fas fa-plus"></i>Adicionar Dívida</button>
+      </div>
+
+      <table id="debtsTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">ID <i class="fas fa-sort"></i></th>
+            <th onclick="sortTable(1)">Nome <i class="fas fa-sort"></i></th>
+            <th onclick="sortTable(2)">Valor <i class="fas fa-sort"></i></th>
+            <th>Status</th>
+            <th onclick="sortTable(4)">Vencimento <i class="fas fa-sort"></i></th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="debtModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Adicionar Dívida</h2>
+        <span class="close" onclick="closeModal()">&times;</span>
+      </div>
+      <form id="debtForm">
+        <input type="hidden" id="debtId">
+        <div class="form-group">
+          <label for="debtName">Nome</label>
+          <input type="text" id="debtName" required placeholder="Nome da dívida">
+        </div>
+        <div class="form-group">
+          <label for="debtValue">Valor</label>
+          <input type="number" id="debtValue" required placeholder="Valor a pagar" step="0.01">
+        </div>
+        <div class="form-group">
+          <label for="debtStatus">Status</label>
+          <select id="debtStatus" required>
+            <option value="">Selecionar status</option>
+            <option value="paid">Pago</option>
+            <option value="paying">Pagando</option>
+            <option value="pending">Pendente</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="debtDate">Vencimento</label>
+          <input type="date" id="debtDate" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar Dívida</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="../script/main.js"></script>
+</body>
+</html>
