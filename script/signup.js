@@ -27,7 +27,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     await updateProfile(userCredential.user, { displayName: name })
 
     alert("Conta criada com sucesso!")
-    window.location.href = "index.html"
+    window.location.href = "../pages/home.html"
   } catch (error) {
     alert("Erro no cadastro: " + error.message)
   }
