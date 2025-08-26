@@ -21,27 +21,34 @@ const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const db = getFirestore(app)
 
-// Var
+// Variáveis
 let debts = []
+let moneyTransactions = []
 const debtsTable = document.getElementById('debtsTable')
 const debtModal = document.getElementById('debtModal')
+const moneyModal = document.getElementById('moneyModal')
 const debtForm = document.getElementById('debtForm')
+const moneyForm = document.getElementById('moneyForm')
 const modalTitle = document.getElementById('modalTitle')
 const debtId = document.getElementById('debtId')
 const debtName = document.getElementById('debtName')
 const debtValue = document.getElementById('debtValue')
 const debtStatus = document.getElementById('debtStatus')
 const debtDate = document.getElementById('debtDate')
+const moneyValue = document.getElementById('moneyValue')
+const moneyReason = document.getElementById('moneyReason')
+const moneyDate = document.getElementById('moneyDate')
 const totalDebtElement = document.getElementById('totalDebt')
 const paidAmountElement = document.getElementById('paidAmount')
 const pendingAmountElement = document.getElementById('pendingAmount')
 const overdueAmountElement = document.getElementById('overdueAmount')
+const userWalletElement = document.getElementById('userWallet')
 
-// User
+// Usuário
 onAuthStateChanged(auth, (user) => {
   if (user) {
     document.getElementById("userName").textContent = user.displayName || user.email
-    loadDebts()
+    loadData()
   } else {
     window.location.href = "../login.html"
   }
@@ -54,7 +61,15 @@ document.getElementById("logoutBtn").addEventListener("click", async (e) => {
   window.location.href = "../login.html"
 })
 
-// Debts
+// Carregar dados
+async function loadData() {
+  await loadDebts()
+  await loadMoneyTransactions()
+  updateSummary()
+  updateWallet()
+}
+
+// Carregar dívidas
 async function loadDebts() {
   debts = []
   const user = auth.currentUser
@@ -70,10 +85,27 @@ async function loadDebts() {
     debts.push({ id: docSnap.id, ...docSnap.data() })
   })
 
-  updateSummary()
   renderDebtsTable()
 }
 
+// Carregar transações de dinheiro
+async function loadMoneyTransactions() {
+  moneyTransactions = []
+  const user = auth.currentUser
+  if (!user) return
+
+  const q = query(
+    collection(db, "money_transactions"),
+    where("userId", "==", user.uid)
+  )
+
+  const querySnapshot = await getDocs(q)
+  querySnapshot.forEach((docSnap) => {
+    moneyTransactions.push({ id: docSnap.id, ...docSnap.data() })
+  })
+}
+
+// Atualizar resumo das dívidas
 function updateSummary() {
   let total = 0, paid = 0, pending = 0, overdue = 0
   const today = new Date()
@@ -92,12 +124,29 @@ function updateSummary() {
       }
     }
   })
-  totalDebtElement.textContent = `$${total.toFixed(2)}`
-  paidAmountElement.textContent = `$${paid.toFixed(2)}`
-  pendingAmountElement.textContent = `$${pending.toFixed(2)}`
-  overdueAmountElement.textContent = `$${overdue.toFixed(2)}`
+  totalDebtElement.textContent = `R$${total.toFixed(2)}`
+  paidAmountElement.textContent = `R$${paid.toFixed(2)}`
+  pendingAmountElement.textContent = `R$${pending.toFixed(2)}`
+  overdueAmountElement.textContent = `R$${overdue.toFixed(2)}`
 }
 
+// Atualizar saldo da carteira
+function updateWallet() {
+  // Calcular total de dinheiro adicionado
+  const totalMoney = moneyTransactions.reduce((sum, transaction) => sum + transaction.value, 0)
+  
+  // Calcular total de dívidas pendentes (não pagas)
+  const totalPendingDebts = debts
+    .filter(debt => debt.status !== 'paid')
+    .reduce((sum, debt) => sum + debt.value, 0)
+  
+  // Saldo disponível = dinheiro total - dívidas pendentes
+  const availableBalance = totalMoney - totalPendingDebts
+  
+  userWalletElement.textContent = `R$${totalMoney.toFixed(2)} (Disponível: R$${availableBalance.toFixed(2)})`
+}
+
+// Renderizar tabela de dívidas
 function renderDebtsTable(filter = 'all') {
   const tbody = debtsTable.querySelector('tbody')
   tbody.innerHTML = ''
@@ -133,7 +182,7 @@ function renderDebtsTable(filter = 'all') {
     tr.innerHTML = `
       <td>#${debt.id.slice(0,6)}</td>
       <td>${debt.name}</td>
-      <td>$${debt.value.toFixed(2)}</td>
+      <td>R$${debt.value.toFixed(2)}</td>
       <td><span class="status ${statusClass}">${statusText}</span></td>
       <td class="due-date ${dateClass}">${formatDate(debt.date)}</td>
       <td class="actions-cell">
@@ -149,18 +198,19 @@ function formatDate(dateString) {
   return new Date(dateString).toLocaleDateString('pt-br', options)
 }
 
-// Filters
+// Filtros
 window.filterDebts = function(filter) {
   document.querySelectorAll('.btn-filter').forEach(btn => btn.classList.remove('active'))
   event.target.classList.add('active')
   renderDebtsTable(filter)
 }
 
-function openModal(id = null) {
+// Modal de dívidas
+function openDebtModal(id = null) {
   if (id) {
     const debt = debts.find(d => d.id === id)
     if (debt) {
-      modalTitle.textContent = 'Edit Debt'
+      modalTitle.textContent = 'Editar Dívida'
       debtId.value = debt.id
       debtName.value = debt.name
       debtValue.value = debt.value
@@ -168,21 +218,32 @@ function openModal(id = null) {
       debtDate.value = debt.date
     }
   } else {
-    modalTitle.textContent = 'Add New Debt'
+    modalTitle.textContent = 'Adicionar Dívida'
     debtForm.reset()
     debtId.value = ''
   }
   debtModal.style.display = 'flex'
 }
-window.openModal = openModal
+window.openDebtModal = openDebtModal
 
-function closeModal() {
-  debtModal.style.display = 'none'
+// Modal de dinheiro
+function openMoneyModal() {
+  moneyForm.reset()
+  // Definir data atual como padrão
+  const today = new Date().toISOString().split('T')[0]
+  moneyDate.value = today
+  moneyModal.style.display = 'flex'
+}
+window.openMoneyModal = openMoneyModal
+
+// Fechar modais
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none'
 }
 window.closeModal = closeModal
 
-// Create
-async function handleFormSubmit(e) {
+// Manipular envio do formulário de dívidas
+async function handleDebtFormSubmit(e) {
   e.preventDefault()
   const id = debtId.value
   const name = debtName.value
@@ -196,46 +257,94 @@ async function handleFormSubmit(e) {
     return
   }
 
-  if (id) {
-    // Atualizar
-    const debtRef = doc(db, "debts", id)
-    await updateDoc(debtRef, { name, value, status, date })
-  } else {
-    // Criar
-    await addDoc(collection(db, "debts"), { 
-      name, 
-      value, 
-      status, 
+  try {
+    if (id) {
+      // Atualizar
+      const debtRef = doc(db, "debts", id)
+      await updateDoc(debtRef, { name, value, status, date })
+    } else {
+      // Criar
+      await addDoc(collection(db, "debts"), { 
+        name, 
+        value, 
+        status, 
+        date,
+        userId: user.uid
+      })
+    }
+
+    closeModal('debtModal')
+    await loadData()
+  } catch (error) {
+    console.error("Erro ao salvar dívida:", error)
+    alert("Erro ao salvar dívida. Tente novamente.")
+  }
+}
+
+// Manipular envio do formulário de dinheiro
+async function handleMoneyFormSubmit(e) {
+  e.preventDefault()
+  const value = parseFloat(moneyValue.value)
+  const reason = moneyReason.value
+  const date = moneyDate.value
+
+  const user = auth.currentUser
+  if (!user) {
+    alert("Você precisa estar logado para adicionar dinheiro.")
+    return
+  }
+
+  try {
+    await addDoc(collection(db, "money_transactions"), {
+      value,
+      reason,
       date,
-      userId: user.uid
+      userId: user.uid,
+      createdAt: new Date()
     })
-  }
 
-  closeModal()
-  loadDebts()
+    closeModal('moneyModal')
+    await loadData()
+    alert("Dinheiro adicionado com sucesso!")
+  } catch (error) {
+    console.error("Erro ao adicionar dinheiro:", error)
+    alert("Erro ao adicionar dinheiro. Tente novamente.")
+  }
 }
 
-// Update
+// Editar dívida
 window.editDebt = function(id) {
-  openModal(id)
+  openDebtModal(id)
 }
 
-// Delete
+// Deletar dívida
 window.deleteDebt = async function(id) {
-  if (confirm('Are you sure you want to delete this debt?')) {
-    await deleteDoc(doc(db, "debts", id))
-    loadDebts()
+  if (confirm('Tem certeza que deseja deletar esta dívida?')) {
+    try {
+      await deleteDoc(doc(db, "debts", id))
+      await loadData()
+    } catch (error) {
+      console.error("Erro ao deletar dívida:", error)
+      alert("Erro ao deletar dívida. Tente novamente.")
+    }
   }
 }
 
+// Inicialização
 async function init() {
-  document.getElementById('addDebtBtn').addEventListener('click', () => openModal())
-  debtForm.addEventListener('submit', handleFormSubmit)
+  document.getElementById('addDebtBtn').addEventListener('click', () => openDebtModal())
+  document.getElementById('addMoneyBtn').addEventListener('click', () => openMoneyModal())
+  debtForm.addEventListener('submit', handleDebtFormSubmit)
+  moneyForm.addEventListener('submit', handleMoneyFormSubmit)
 }
 
+// Fechar modal ao clicar fora
 window.onclick = function(event) {
   if (event.target === debtModal) {
-    closeModal()
+    closeModal('debtModal')
+  }
+  if (event.target === moneyModal) {
+    closeModal('moneyModal')
   }
 }
 

@@ -14,6 +14,7 @@
     <div class="logo">PayPlanner</div>
 
     <div class="user-profile" id="userDropdown">
+      <span id="userWallet">Carregando...</span>
       <span id="userName">Carregando...</span>
       <span class="arrow">▼</span>
       <div class="dropdown-menu">
@@ -39,6 +40,7 @@
           <button class="btn-filter" onclick="filterDebts('overdue')">Vencidas</button>
         </div>
         <button class="btn-primary" id="addDebtBtn"><i class="fas fa-plus"></i>Adicionar Dívida</button>
+        <button class="btn-primary" id="addMoneyBtn"><i class="fas fa-plus"></i>Adicionar Dinheiro</button>
       </div>
 
       <table id="debtsTable">
@@ -57,12 +59,12 @@
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal para Dívidas -->
   <div class="modal" id="debtModal">
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="modalTitle">Adicionar Dívida</h2>
-        <span class="close" onclick="closeModal()">&times;</span>
+        <span class="close" onclick="closeModal('debtModal')">&times;</span>
       </div>
       <form id="debtForm">
         <input type="hidden" id="debtId">
@@ -88,8 +90,36 @@
           <input type="date" id="debtDate" required>
         </div>
         <div class="form-actions">
-          <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+          <button type="button" class="btn-cancel" onclick="closeModal('debtModal')">Cancelar</button>
           <button type="submit" class="btn-primary">Salvar Dívida</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para Adicionar Dinheiro -->
+  <div class="modal" id="moneyModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Adicionar Dinheiro</h2>
+        <span class="close" onclick="closeModal('moneyModal')">&times;</span>
+      </div>
+      <form id="moneyForm">
+        <div class="form-group">
+          <label for="moneyValue">Valor</label>
+          <input type="number" id="moneyValue" required placeholder="Valor a adicionar" step="0.01" min="0">
+        </div>
+        <div class="form-group">
+          <label for="moneyReason">Motivo</label>
+          <input type="text" id="moneyReason" required placeholder="Motivo da adição">
+        </div>
+        <div class="form-group">
+          <label for="moneyDate">Data</label>
+          <input type="date" id="moneyDate" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal('moneyModal')">Cancelar</button>
+          <button type="submit" class="btn-primary">Adicionar Dinheiro</button>
         </div>
       </form>
     </div>
