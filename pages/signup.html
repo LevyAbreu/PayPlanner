@@ -22,12 +22,23 @@
         </div>
         <div class="form-group">
           <label for="password">Senha</label>
-          <input type="password" id="password" placeholder="Digite sua senha" required>
+          <div class="password-wrapper">
+            <input type="password" id="password" placeholder="Digite sua senha" required>
+            <button type="button" class="toggle-password" data-target="password"></button>
+          </div>
         </div>
+        <div class="form-group">
+          <label for="passwordConfirm">Repita a senha</label>
+          <div class="password-wrapper">
+            <input type="password" id="passwordConfirm" placeholder="Repita sua senha" required>
+            <button type="button" class="toggle-password" data-target="passwordConfirm"></button>
+          </div>
+        </div>
+        
         <button type="submit" class="btn-primary">Cadastrar</button>
       </form>
 
-      <p class="signup-text">Já tem uma conta? <a href="login.html">Entrar</a></p>
+      <p class="signup-text">Já tem uma conta? <a href="../login.html">Entrar</a></p>
     </div>
   </div>
 
