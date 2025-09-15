@@ -1,95 +1,78 @@
+<!-- Banner -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=121826&height=200&section=header&text=PayPlanner%20&fontSize=40&fontColor=fff&animation=fadeIn&fontAlignY=35"/>
+
 # PayPlanner
 
-Um aplicativo web moderno para gerenciamento de dívidas e finanças pessoais, desenvolvido com Firebase para autenticação e armazenamento de dados.
+**PayPlanner** is a modern web application for **personal finance and debt management**,  
+developed with **Firebase** for authentication and data storage.
 
-## 📋 Funcionalidades
-
-- **Autenticação de Usuários**: Sistema de login seguro com Firebase Auth
-- **Dashboard Financeiro**: Visão geral das finanças com métricas importantes
-- **Gestão de Dívidas**: 
-  - Adicionar novas dívidas
-  - Editar dívidas existentes
-  - Excluir dívidas
-  - Filtrar por status (todas, pagas, em pagamento, pendentes, vencidas)
-- **Resumo Financeiro**:
-  - Total de dívidas
-  - Valor pago
-  - Valor pendente
-  - Valor vencido
-- **Interface Responsiva**: Design adaptável para desktop e dispositivos móveis
-
-## 🛠️ Tecnologias Utilizadas
-
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Backend**: Firebase (Firestore, Authentication)
-- **Deploy**: Hospedagem estática (GitHub Pages, Vercel)
-
-## 📦 Estrutura do Projeto
-
-```
-payplanner/
-├── pages 
-│   ├── index.html
-│   └── signup.html
-├── style/
-│   ├── login.css 
-│   └── style.css
-├── script/
-│   ├── login.js
-│   └── main.js
-│   └── signup.js
-└── login.html
-```
-
-## 📱 Como Usar
-
-1. **Cadastro e Login**
-   - Acesse a aplicação
-   - Faça login com suas credenciais
-   - Crie uma conta se for preciso
-
-2. **Adicionar Dívidas**
-   - Clique no botão "Adicionar Dívida"
-   - Preencha os detalhes: nome, valor, status e data de vencimento
-   - Clique em "Salvar Dívida"
-
-3. **Gerenciar Dívidas**
-   - Use os filtros para visualizar dívidas por status
-   - Edite dívidas clicando no ícone de lápis
-   - Exclua dívidas clicando no ícone de lixeira
-
-4. **Acompanhar seu Progresso**
-   - Visualize o resumo financeiro no topo da página
-   - Monitore dívidas próximas do vencimento ou vencidas
-
-## 🎨 Personalização
-
-Você pode personalizar facilmente a aparência da aplicação editando o arquivo `style.css`. As cores principais são definidas usando variáveis CSS que podem ser modificadas para alterar o tema completo.
-
-## 🔒 Segurança
-
-- Todas as operações de banco de dados são validadas pelas regras de segurança do Firebase
-- Cada usuário só pode acessar suas próprias dívidas
-- Dados sensíveis são protegidos pelas políticas de segurança do Firebase
-
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
-## 🤝 Contribuindo
-
-Contribuições são sempre bem-vindas! Sinta-se à vontade para:
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📞 Suporte
-
-Se você tiver alguma dúvida ou problema, sinta-se à vontade para abrir uma issue no repositório.
+**Access here:** [PayPlanner Online](https://pay-planner.vercel.app/)
 
 ---
 
-**Nota**: Este projeto é para fins educacionais e pode precisar de ajustes adicionais para uso em produção.
+## Badges
+
+![Status](https://img.shields.io/badge/Status-In%20Development-orange?style=for-the-badge)  
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=fff&style=for-the-badge)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=fff&style=for-the-badge)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=000&style=for-the-badge)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=000&style=for-the-badge)
+![Figma](https://img.shields.io/badge/Figma-F24E1E?logo=figma&logoColor=fff&style=for-the-badge)
+
+---
+
+## Features
+
+- **User Authentication**: secure login with Firebase Auth.  
+- **Financial Dashboard**: overview of key financial metrics.  
+- **Debt Management**:  
+  - Add new debts  
+  - Edit or delete debts  
+  - Filter debts by status: `Paid`, `In Payment`, `Pending`, `Overdue`  
+- **Financial Summary**:  
+  - Total debts  
+  - Paid amount  
+  - Pending amount  
+  - Overdue amount  
+- **Responsive Design**: fully functional on desktop and mobile devices.  
+
+---
+
+## Technologies Used
+
+<div align="center">
+  <img src="https://skillicons.dev/icons?i=html,css,js,firebase" />
+</div>
+
+- **HTML5**  
+- **CSS3** (responsive design, variables for theme customization)  
+- **JavaScript (ES6+)**  
+- **Firebase** (Authentication & Firestore)  
+- **Hosting** (GitHub Pages / Vercel)  
+
+---
+
+## Preview
+
+<div align="center">
+  <h3>Login</h3>
+  <img src="assets/demo/loginscreen.png" width="600" alt="Login Preview"/>
+
+  <h3>Dashboard</h3>
+  <img src="assets/demo/dashboard.png"  width="600" alt="Dashboard Preview"/>
+</div>
+
+---
+
+## Project Status
+
+**In development** – new features will be added soon.
+
+---
+
+## Author
+
+Made by **[Levy Abreu](https://github.com/LevyAbreu)**
+
+<!-- Footer -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=121826&height=120&section=footer"/>
