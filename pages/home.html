@@ -1,130 +1,298 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Home - PayPlanner</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - PayPlanner</title>
+  <link rel="icon" href="../assets/images/logo.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../style/style.css">
-  <link rel="icon" href="../assets/logo.png" type="image/png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="dashboard" id="dashboard">
   <header class="header">
     <div class="logo">PayPlanner</div>
-
-    <div class="user-profile" id="userDropdown">
-      <span id="userWallet">Carregando...</span>
-      <span id="userName">Carregando...</span>
-      <span class="arrow">▼</span>
-      <div class="dropdown-menu">
-        <a href="#" id="logoutBtn">Sair</a>
+    <nav class="main-nav">
+    </nav>
+    <div class="header-actions">
+      <button class="action-btn" aria-label="Pesquisar"><i class="fas fa-search"></i></button>
+      <button class="action-btn" aria-label="Notificações"><i class="fas fa-bell"></i></button>
+      <div class="user-profile">
+        <span id="userName">Carregando...</span>
+        <div class="profile-menu-container">
+          <div class="user-avatar"></div>
+          <div class="profile-menu">
+            <a href="#" class="menu-item"><i class="fas fa-user"></i> Perfil</a>
+            <a href="#" class="menu-item"><i class="fas fa-cog"></i> Configurações</a>
+            <div class="menu-divider"></div>
+            <a href="#" class="menu-item"><i class="fas fa-sign-out-alt"></i> Sair</a>
+          </div>
+        </div>
       </div>
     </div>
   </header>
-    
-    <div class="container">
-      <div class="summary">
-        <div class="summary-card total"><h3>Dívida Total</h3><p id="totalDebt">R$0,00</p></div>
-        <div class="summary-card paid"><h3>Pagas</h3><p id="paidAmount">R$0,00</p></div>
-        <div class="summary-card pending"><h3>Pendentes</h3><p id="pendingAmount">R$0,00</p></div>
-        <div class="summary-card overdue"><h3>Vencidas</h3><p id="overdueAmount">R$0,00</p></div>
-      </div>
 
-      <div class="actions">
-        <div class="filters">
-          <button class="btn-filter active" onclick="filterDebts('all')">Todas</button>
-          <button class="btn-filter" onclick="filterDebts('paid')">Pagas</button>
-          <button class="btn-filter" onclick="filterDebts('paying')">Em Pagamento</button>
-          <button class="btn-filter" onclick="filterDebts('pending')">Pendentes</button>
-          <button class="btn-filter" onclick="filterDebts('overdue')">Vencidas</button>
-        </div>
-        <button class="btn-primary" id="addDebtBtn"><i class="fas fa-plus"></i>Adicionar Dívida</button>
-        <button class="btn-primary" id="addMoneyBtn"><i class="fas fa-plus"></i>Adicionar Dinheiro</button>
-      </div>
-
-      <table id="debtsTable">
-        <thead>
-          <tr>
-            <th onclick="sortTable(0)">ID <i class="fas fa-sort"></i></th>
-            <th onclick="sortTable(1)">Nome <i class="fas fa-sort"></i></th>
-            <th onclick="sortTable(2)">Valor <i class="fas fa-sort"></i></th>
-            <th>Status</th>
-            <th onclick="sortTable(4)">Vencimento <i class="fas fa-sort"></i></th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+  <main class="dashboard">
+    <div class="dashboard-header">
+      <button class="primary-btn" id="addMoneyBtn">
+        <i class="fas fa-plus"></i> Dinheiro
+      </button>
+      <button class="primary-btn" id="addInvestBtn">
+        <i class="fas fa-plus"></i> Investimento
+      </button>
+      <button class="primary-btn" id="addExpenseBtn">
+        <i class="fas fa-plus"></i> Despesa
+      </button>
     </div>
-  </div>
-
-  <!-- Modal para Dívidas -->
-  <div class="modal" id="debtModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modalTitle">Adicionar Dívida</h2>
-        <span class="close" onclick="closeModal('debtModal')">&times;</span>
+    
+    <!-- Modais existentes (mantidos iguais) -->
+    <div class="modal-backdrop" id="moneyModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Adicionar Dinheiro</h3>
+          <button class="close-modal-btn" aria-label="Fechar">&times;</button>
+        </div>
+        <form id="moneyForm">
+          <div class="form-message" id="moneyMessage"></div>
+          <div class="form-field">
+            <label for="moneyName">Origem do Dinheiro</label>
+            <input type="text" id="moneyName" placeholder="Ex: Salário, Freela, Presente..." required>
+          </div>
+          <div class="form-field">
+            <label for="moneyAmount">Valor (R$)</label>
+            <input type="number" id="moneyAmount" step="0.01" min="0.01" placeholder="0,00" required>
+          </div>
+          <div class="form-field">
+            <label for="moneyType">Tipo</label>
+            <select id="moneyType" required>
+              <option value="">Selecione o tipo</option>
+              <option value="salario">Salário</option>
+              <option value="investimento">Investimento</option>
+              <option value="presente">Presente</option>
+              <option value="extra">Extra</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="moneyDate">Data</label>
+            <input type="date" id="moneyDate" required>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="secondary-btn">Cancelar</button>
+            <button type="submit" class="primary-btn">Adicionar Dinheiro</button>
+          </div>
+        </form>
       </div>
-      <form id="debtForm">
-        <input type="hidden" id="debtId">
-        <div class="form-group">
-          <label for="debtName">Nome</label>
-          <input type="text" id="debtName" required placeholder="Nome da dívida">
+    </div>
+
+    <div class="modal-backdrop" id="investModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Adicionar Investimento</h3>
+          <button class="close-modal-btn" aria-label="Fechar">&times;</button>
         </div>
-        <div class="form-group">
-          <label for="debtValue">Valor</label>
-          <input type="number" id="debtValue" required placeholder="Valor a pagar" step="0.01">
+        <form id="investForm">
+          <div class="form-message" id="investMessage"></div>
+          <div class="form-field">
+            <label for="investName">Nome do Investimento</label>
+            <input type="text" id="investName" placeholder="Ex: Ações, Poupança, CDB..." required>
+          </div>
+          <div class="form-field">
+            <label for="investAmount">Valor Investido (R$)</label>
+            <input type="number" id="investAmount" step="0.01" min="0.01" placeholder="0,00" required>
+          </div>
+          <div class="form-field">
+            <label for="investType">Tipo de Investimento</label>
+            <select id="investType" required>
+              <option value="">Selecione o tipo</option>
+              <option value="renda_fixa">Renda Fixa</option>
+              <option value="renda_variavel">Renda Variável</option>
+              <option value="poupanca">Poupança</option>
+              <option value="criptomoedas">Criptomoedas</option>
+              <option value="fundos">Fundos de Investimento</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="investDate">Data do Investimento</label>
+            <input type="date" id="investDate" required>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="secondary-btn">Cancelar</button>
+            <button type="submit" class="primary-btn">Adicionar Investimento</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <div class="modal-backdrop" id="expenseModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Adicionar Nova Despesa</h3>
+          <button class="close-modal-btn" aria-label="Fechar">&times;</button>
         </div>
-        <div class="form-group">
-          <label for="debtStatus">Status</label>
-          <select id="debtStatus" required>
-            <option value="">Selecionar status</option>
-            <option value="paid">Pago</option>
-            <option value="paying">Pagando</option>
-            <option value="pending">Pendente</option>
+        <form id="expenseForm">
+          <div class="form-message" id="expenseMessage"></div>
+          <div class="form-field">
+            <label for="expenseName">Nome da Despesa</label>
+            <input type="text" id="expenseName" placeholder="Ex: Aluguel, Supermercado..." required>
+          </div>
+          <div class="form-field">
+            <label for="expenseAmount">Valor (R$)</label>
+            <input type="number" id="expenseAmount" step="0.01" min="0.01" placeholder="0,00" required>
+          </div>
+          <div class="form-field">
+            <label for="expenseCategory">Categoria</label>
+            <select id="expenseCategory" required>
+              <option value="">Selecione a categoria</option>
+              <option value="fixa">Fixa</option>
+              <option value="alimentação">Alimentação</option>
+              <option value="saúde">Saúde</option>
+              <option value="lazer">Lazer</option>
+              <option value="transporte">Transporte</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="expenseStatus">Status</label>
+            <select id="expenseStatus" required>
+              <option value="">Selecione o status</option>
+              <option value="pending">Devendo</option>
+              <option value="paid">Paga</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="expenseDate">Data</label>
+            <input type="date" id="expenseDate" required>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="secondary-btn">Cancelar</button>
+            <button type="submit" class="primary-btn">Adicionar Despesa</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modais de edição e exclusão (mantidos iguais) -->
+    <div class="modal-backdrop" id="editExpenseModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Editar Despesa</h3>
+          <button class="close-modal-btn" aria-label="Fechar">&times;</button>
+        </div>
+        <form id="editExpenseForm">
+          <div class="form-message" id="editExpenseMessage"></div>
+          <input type="hidden" id="editExpenseId">
+          <div class="form-field">
+            <label for="editExpenseName">Nome da Despesa</label>
+            <input type="text" id="editExpenseName" placeholder="Ex: Aluguel, Supermercado..." required>
+          </div>
+          <div class="form-field">
+            <label for="editExpenseAmount">Valor (R$)</label>
+            <input type="number" id="editExpenseAmount" step="0.01" min="0.01" placeholder="0,00" required>
+          </div>
+          <div class="form-field">
+            <label for="editExpenseCategory">Categoria</label>
+            <select id="editExpenseCategory" required>
+              <option value="">Selecione a categoria</option>
+              <option value="fixa">Fixa</option>
+              <option value="alimentação">Alimentação</option>
+              <option value="saúde">Saúde</option>
+              <option value="lazer">Lazer</option>
+              <option value="transporte">Transporte</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="editExpenseStatus">Status</label>
+            <select id="editExpenseStatus" required>
+              <option value="">Selecione o status</option>
+              <option value="pending">Devendo</option>
+              <option value="paid">Paga</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="editExpenseDate">Data</label>
+            <input type="date" id="editExpenseDate" required>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="secondary-btn">Cancelar</button>
+            <button type="submit" class="primary-btn">Salvar Alterações</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="deleteConfirmModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Confirmar Exclusão</h3>
+          <button class="close-modal-btn" aria-label="Fechar">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Tem certeza que deseja excluir esta despesa?</p>
+          <p><strong id="deleteExpenseName"></strong></p>
+          <p id="deleteExpenseDetails"></p>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="secondary-btn" id="cancelDeleteBtn">Cancelar</button>
+          <button type="button" class="primary-btn danger" id="confirmDeleteBtn">Excluir</button>
+        </div>
+      </div>
+    </div>
+    
+    <section class="financial-cards">
+      <div class="financial-card">
+        <h3><i class="fas fa-money-bill-wave"></i> Dívidas a pagar</h3>
+        <p class="amount-value" id="debtsToPay">Carregando...</p>
+        <small class="trend-indicator"><i class="fas fa-arrow-up trend-up"></i> <span id="payVariation">+42.8%</span> comparado ao mês passado</small>
+      </div>
+      <div class="financial-card">
+        <h3><i class="fas fa-check-circle"></i> Dívidas pagas</h3>
+        <p class="amount-value" id="paidDebts">Carregando...</p>
+        <small class="trend-indicator"><i class="fas fa-arrow-down trend-down"></i> <span id="paidVariation">-24.3%</span> comparado ao mês passado</small>
+      </div>
+      <div class="financial-card highlight-card">
+        <h3><i class="fas fa-wallet"></i> Dinheiro disponível</h3>
+        <p class="amount-value" id="availableMoney">Carregando...</p>
+        <small class="trend-indicator"><i class="fas fa-arrow-down trend-neutral"></i> <span id="moneyVariation">-18.4%</span> comparado ao mês passado</small>
+      </div>
+    </section>
+
+    <section class="dashboard-content">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3><i class="fas fa-chart-bar"></i> Dinheiro Acumulado (Investimentos ou Cofrinhos)</h3>
+          <div class="view-toggle">
+            <button id="monthlyViewBtn">Mensal</button>
+            <button class="active" id="yearlyViewBtn">Anual</button>
+          </div>
+        </div>
+        <canvas id="accumulatedMoneyChart"></canvas>
+      </div>
+
+      <div class="expense-history">
+        <h3><i class="fas fa-history"></i>
+          Histórico de 
+          <select id="historyType" class="history-type-select">
+            <option value="gastos">Gastos</option>
+            <option value="ganhos">Ganhos</option>
+            <option value="investimentos">Investimentos</option>
+          </select>
+        </h3>
+        <div class="filter-controls">
+          <input type="text" id="expenseSearch" placeholder="Buscar...">
+          <select id="dateFilter">
+            <option value="all">Todos</option>
+            <option value="day">Hoje</option>
+            <option value="month">Este Mês</option>
+            <option value="year">Este Ano</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="debtDate">Vencimento</label>
-          <input type="date" id="debtDate" required>
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn-cancel" onclick="closeModal('debtModal')">Cancelar</button>
-          <button type="submit" class="btn-primary">Salvar Dívida</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal para Adicionar Dinheiro -->
-  <div class="modal" id="moneyModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Adicionar Dinheiro</h2>
-        <span class="close" onclick="closeModal('moneyModal')">&times;</span>
+        <ul id="expenseHistoryList"></ul>
       </div>
-      <form id="moneyForm">
-        <div class="form-group">
-          <label for="moneyValue">Valor</label>
-          <input type="number" id="moneyValue" required placeholder="Valor a adicionar" step="0.01" min="0">
-        </div>
-        <div class="form-group">
-          <label for="moneyReason">Motivo</label>
-          <input type="text" id="moneyReason" required placeholder="Motivo da adição">
-        </div>
-        <div class="form-group">
-          <label for="moneyDate">Data</label>
-          <input type="date" id="moneyDate" required>
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn-cancel" onclick="closeModal('moneyModal')">Cancelar</button>
-          <button type="submit" class="btn-primary">Adicionar Dinheiro</button>
-        </div>
-      </form>
-    </div>
-  </div>
+    </section>
+  </main>
 
-  <script type="module" src="../script/main.js"></script>
+  <script type="module" src="../assets/js/script.js"></script>
 </body>
 </html>

@@ -16,7 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 
-// Login
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault()
   const email = document.getElementById("email").value
@@ -33,11 +32,9 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
 
 document.querySelectorAll(".toggle-password").forEach(btn => {
-  // definir imagens
   const olhoAberto = "https://img.icons8.com/?size=100&id=59814&format=png&color=22C55E";
   const olhoFechado = "https://img.icons8.com/?size=100&id=60022&format=png&color=22C55E";
 
-  // definir imagem inicial
   btn.innerHTML = `<img src="${olhoFechado}" alt="Mostrar senha" width="20">`;
 
   btn.addEventListener("click", () => {

@@ -14,7 +14,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 
-// Função de validação de senha
 function validarSenha(password) {
   const errors = []
   if (!/[0-9]/.test(password)) errors.push("A senha deve conter ao menos 1 número.")
@@ -33,13 +32,11 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   const password = document.getElementById("password").value
   const passwordConfirm = document.getElementById("passwordConfirm").value
 
-  // Confirmação de senha
   if (password !== passwordConfirm) {
     alert("As senhas não coincidem!")
     return
   }
 
-  // Validação de senha
   const errosSenha = validarSenha(password)
   if (errosSenha.length > 0) {
     alert(errosSenha.join("\n"))
@@ -61,7 +58,6 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   }
 })
 
-// Mostrar/ocultar senha
 document.querySelectorAll(".toggle-password").forEach(btn => {
   const olhoAberto = "https://img.icons8.com/?size=100&id=59814&format=png&color=22C55E"
   const olhoFechado = "https://img.icons8.com/?size=100&id=60022&format=png&color=22C55E"
