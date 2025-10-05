@@ -56,10 +56,10 @@ developed with **Firebase** for authentication and data storage.
 
 <div align="center">
   <h3>Login</h3>
-  <img src="assets/demo/loginscreen.png" width="600" alt="Login Preview"/>
+  <img src="assets/images/demo/loginscreen.png" width="600" alt="Login Preview"/>
 
   <h3>Dashboard</h3>
-  <img src="assets/demo/dashboard.png"  width="600" alt="Dashboard Preview"/>
+  <img src="assets/images/demo/dashboard.png"  width="600" alt="Dashboard Preview"/>
 </div>
 
 ---
